@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportsORM.Models;
 
 
@@ -96,7 +97,62 @@ namespace SportsORM.Controllers
         [HttpGet("level_2")]
         public IActionResult Level2()
         {
-            return View();
+            // ViewBag.AllTeams = _context.Leagues
+            // .Where(l => l.Name.Contains("Conference"))
+            // .Include(l => l.Teams);
+            
+            // ViewBag.AllTeams = _context.Teams
+            // .Where(l => l.Name.Contains("Conference"))
+            // .Include(l => l.Teams);
+
+            // ViewBag.AllTeams =_context.Teams
+            // .Where(l => l.LeagueId == 5)
+            // .ToList();
+            // .Where(T => message.UserId != userId)
+
+            List<Team> teamswithLeague = _context.Teams
+            .Include(team => team.CurrLeague)
+            .Where(t => t.CurrLeague.Name.Contains("Atlantic Soccer Conference"))
+            .ToList();
+
+            ViewBag.teamswithLeague = teamswithLeague;
+
+            List<Player> playerswithteam = _context.Players
+            .Include(player=> player.CurrentTeam)
+            .Where(p => p.CurrentTeam.TeamName.Equals("Penguins") && p.CurrentTeam.Location.Equals("Boston"))
+            .ToList();
+
+            ViewBag.playerswithteam = playerswithteam;
+            
+            List<Player> currentPlayerswithTeam = _context.Players
+            .Include(p => p.CurrentTeam)
+            .ThenInclude(t => t.CurrLeague)
+            .Where(p => p.CurrentTeam.CurrLeague.Name == "International Collegiate Baseball Conference")
+            .ToList();
+
+            ViewBag.currentPlayerswithTeam = currentPlayerswithTeam;
+
+            //5 all football players
+            ViewBag.Football = _context.Players
+            .Include(p => p.CurrentTeam)
+            .ThenInclude(t => t.CurrLeague)
+            .Where(p => p.CurrentTeam.CurrLeague.Sport == "Football")
+            .ToList();
+
+            
+
+
+            //6. all teams with a (current) player named "Sophia"
+            ViewBag.Lopez = _context.Players
+            .Include(p => p.CurrentTeam)
+            .ThenInclude(t => t.CurrLeague)
+            .Where(p => p.CurrentTeam.CurrLeague.Name == "American Conference of Amateur Footbal")
+            .Where(p => p.LastName == "Lopez")
+            .ToList();
+
+            // ViewBag.currPlayerName = currPlayerName;
+            //.Where(t => t.CurrentPlayers.
+            return View("Level2");
         }
 
         [HttpGet("level_3")]

@@ -1,14 +1,41 @@
+@model List<Team>
+
 <div class="card">
     <div class="card-header bg-dark text-light">Level 2</div>
     <div class="card-body">
         <p>Using the SportsORM, complete all the following queries and show their results on Level2.cshtml.</p>
         <ol>
             <li>...all teams in the Atlantic Soccer Conference</li>
+             @foreach (var team in ViewBag.teamswithLeague)
+                {
+                    <p>@team.CurrLeague.Name : @team.TeamName</p>
+                }
             <li>...all (current) players on the Boston Penguins (Hint: Boston is the Location, Penguins is the TeamName)</li>
+
+            @foreach (var team in ViewBag.playerswithteam )
+                {
+                    <p>@team.FirstName :@team.CurrentTeam.TeamName : @team.CurrentTeam.Location</p>
+                }
             <li>...all (current) players in the International Collegiate Baseball Conference</li>
+             @foreach (var team in ViewBag.currentPlayerswithTeam )
+                {
+                    <p>@team.FirstName :@team.CurrentTeam.TeamName : @team.CurrentTeam.CurrLeague.Name</p>
+                }
             <li>...all (current) players in the American Conference of Amateur Football with last name "Lopez"</li>
+            @foreach (var team in ViewBag.Lopez )
+                {
+                    <p>@team.LastName :@team.CurrentTeam.TeamName : @team.CurrentTeam.CurrLeague.Name</p>
+                }
             <li>...all football players</li>
-            <li>...all teams with a (current) player named "Sophia"</li>
+            @foreach (var team in ViewBag.Football )
+                {
+                    <p>@team.FirstName :@team.CurrentTeam.TeamName : @team.CurrentTeam.CurrLeague.Sport</p>
+                }
+            @* <li>...all teams with a (current) player named "Sophia"</li>
+            @foreach (var team in ViewBag.currPlayerName )
+                {
+                    <p>@team.FirstName :@team.CurrentPlayers.FirstName </p>
+                } *@
             <li>...all leagues with a (current) player named "Sophia"</li>
             <li>...everyone with the last name "Flores" who DOESN'T (currently) play for the Washington Roughriders</li>
         </ol>
